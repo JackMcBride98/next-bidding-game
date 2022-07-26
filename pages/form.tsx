@@ -79,6 +79,12 @@ const Form: NextPage = () => {
               ) {
                 setRounds(parseInt(e.target.value));
               }
+              if (
+                parseInt(e.target.value) > 1 &&
+                parseInt(e.target.value) * players.length >= 52
+              ) {
+                setRounds(Math.floor(52 / players.length));
+              }
             }}
           />
         </label>

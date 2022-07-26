@@ -43,7 +43,7 @@ const Home: NextPage = () => {
 
       <main className="flex flex-col items-center space-y-5">
         <h1 className="text-4xl font-bold text-stone-900">ET Bidding Game</h1>
-        <div className="flex w-72 space-x-4">
+        <div className="flex w-72 flex-row gap-4">
           <AceOfHearts />
           <AceOfClubs />
           <AceOfDiamonds />
