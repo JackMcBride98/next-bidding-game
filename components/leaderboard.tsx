@@ -1,16 +1,9 @@
 import React from 'react';
-
-interface Player {
-  name: string;
-  totalScore: number;
-  gameCount: number;
-  wins: number;
-  totalHands: number;
-}
+import { PlayerType } from '../models/player';
 
 interface LeaderboardProps {
   isLoading: boolean;
-  players: Player[];
+  players: PlayerType[];
   handleSort: (sortBy: string) => void;
 }
 

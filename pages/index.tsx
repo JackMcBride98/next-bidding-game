@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,26 +9,31 @@ import AceOfHearts from '../public/images/aceOfHearts.svg';
 import AceOfDiamonds from '../public/images/aceOfDiamonds.svg';
 import AceOfSpades from '../public/images/aceOfSpades.svg';
 import Leaderboard from '../components/leaderboard';
+import Player, { PlayerType } from '../models/player';
 
 const contentType = 'application/json';
+interface Props {
+  players: PlayerType[];
+}
 
-const Home: NextPage = () => {
+const Home: NextPage<Props> = ({ players }) => {
   const [count, setCount] = useState(0);
+  console.log(players);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch('/api/hello', {
-        method: 'GET',
-        headers: {
-          Accept: contentType,
-          'Content-Type': contentType,
-        },
-      }).then((res) => res.json());
-      console.log(res);
-    };
-    fetchData();
-    return () => {};
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await fetch('/api/hello', {
+  //       method: 'GET',
+  //       headers: {
+  //         Accept: contentType,
+  //         'Content-Type': contentType,
+  //       },
+  //     }).then((res) => res.json());
+  //     console.log(res);
+  //   };
+  //   fetchData();
+  //   return () => {};
+  // }, []);
 
   return (
     <div className="bg-gradient-to-t from-red-100 h-full min-h-screen">
@@ -60,10 +65,28 @@ const Home: NextPage = () => {
         >
           ❤️ <span className="font-bold">{count}</span>
         </button>
-        <Leaderboard players={[]} isLoading={false} handleSort={() => {}} />
+        <Leaderboard
+          players={players}
+          isLoading={false}
+          handleSort={() => {}}
+        />
       </main>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  await dbConnect();
+  const players: PlayerType[] = await Player.find({});
+  const filteredPlayers = players.filter((player) => player.gameCount !== 0);
+  const sortedPlayers = filteredPlayers.sort(
+    (a, b) => b.totalScore - a.totalScore
+  );
+  return {
+    props: {
+      players: JSON.parse(JSON.stringify(sortedPlayers)),
+    },
+  };
 };
 
 export default Home;
