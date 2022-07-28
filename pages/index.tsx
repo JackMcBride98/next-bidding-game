@@ -55,7 +55,7 @@ const Home: NextPage<Props> = ({ players }) => {
           <AceOfSpades />
         </div>
         <Link href="/form">
-          <a className="border border-black rounded-lg p-2 bg-white">
+          <a className="rainbow rounded-lg p-2 flex items-center bg-white spinButton">
             Create New Game
           </a>
         </Link>
