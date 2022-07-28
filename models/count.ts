@@ -1,9 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-var Schema = mongoose.Schema;
-
-var CountSchema = new Schema({
+const CountSchema = new Schema({
   count: Number,
 });
 
-module.exports = mongoose.model('Count', CountSchema);
+export default mongoose.models.Count || mongoose.model('Count', CountSchema);

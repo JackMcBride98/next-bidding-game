@@ -12,15 +12,17 @@ import Leaderboard from '../components/leaderboard';
 import GameHistory from '../components/gamehistory';
 import PlayerModel, { PlayerType } from '../models/player';
 import GameModel, { GameType } from '../models/game';
+import Count from '../models/count';
 
 const contentType = 'application/json';
 interface Props {
   players: PlayerType[];
   games: GameType[];
+  storedCount: number;
 }
 
-const Home: NextPage<Props> = ({ players, games }) => {
-  const [count, setCount] = useState(0);
+const Home: NextPage<Props> = ({ players, games, storedCount }) => {
+  const [count, setCount] = useState(storedCount);
 
   return (
     <div className="bg-gradient-to-t from-red-100 h-full min-h-screen min-w-screen">
@@ -47,7 +49,13 @@ const Home: NextPage<Props> = ({ players, games }) => {
           </a>
         </Link>
         <button
-          onClick={() => setCount((count) => count + 1)}
+          onClick={async () => {
+            setCount((count) => count + 1);
+            const res = await fetch('/api/count').then((res) => res.json());
+            if (res.count) {
+              setCount(res.count);
+            }
+          }}
           className="hover:text-lg text-red-500 h-8"
         >
           ❤️ <span className="font-bold">{count}</span>
@@ -69,6 +77,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const games: GameType[] = await GameModel.find({})
     .sort({ _id: -1 })
     .populate('players');
+
+  const count = await Count.find({});
   return {
     props: {
       players: JSON.parse(JSON.stringify(sortedPlayers)),
@@ -79,6 +89,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
           score: game.totalScores[index],
         })),
       })),
+      storedCount: count[0].count,
     },
   };
 };

@@ -49,7 +49,7 @@ function Leaderboard(props: LeaderboardProps) {
                   Points
                 </th>
                 <th
-                  className="py-2 px-1"
+                  className="py-2 px-1 hover:cursor-pointer"
                   onClick={() => handleSort('gameCount')}
                 >
                   Games
