@@ -66,7 +66,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const sortedPlayers = filteredPlayers.sort(
     (a, b) => b.totalScore - a.totalScore
   );
-  const games: GameType[] = await GameModel.find({}).populate('players');
+  const games: GameType[] = await GameModel.find({})
+    .sort({ _id: -1 })
+    .populate('players');
   return {
     props: {
       players: JSON.parse(JSON.stringify(sortedPlayers)),
