@@ -11,6 +11,7 @@ export interface PlayerType {
   totalHands: number;
   games: Game[];
   wins: number;
+  pph?: number;
 }
 
 const PlayerSchema = new Schema<PlayerType>({

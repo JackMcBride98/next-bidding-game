@@ -18,7 +18,6 @@ interface Props {
 
 const Home: NextPage<Props> = ({ players }) => {
   const [count, setCount] = useState(0);
-  console.log(players);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -61,15 +60,11 @@ const Home: NextPage<Props> = ({ players }) => {
         </Link>
         <button
           onClick={() => setCount((count) => count + 1)}
-          className="hover:text-lg text-red-500"
+          className="hover:text-lg text-red-500 h-8"
         >
           ❤️ <span className="font-bold">{count}</span>
         </button>
-        <Leaderboard
-          players={players}
-          isLoading={false}
-          handleSort={() => {}}
-        />
+        <Leaderboard players={players} isLoading={false} />
       </main>
     </div>
   );

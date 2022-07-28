@@ -1,15 +1,33 @@
-import React from 'react';
+import { useState } from 'react';
 import { PlayerType } from '../models/player';
 
 interface LeaderboardProps {
   isLoading: boolean;
   players: PlayerType[];
-  handleSort: (sortBy: string) => void;
 }
+
+type sortBy = 'pph' | 'totalScore' | 'gameCount' | 'wins';
+
+type sort = 'totalScore' | 'gameCount' | 'wins';
 
 function Leaderboard(props: LeaderboardProps) {
   const formatName = (name: String) => {
     return name.charAt(0).toUpperCase() + name.toLowerCase().slice(1);
+  };
+
+  const [sortedPlayers, setSortedPlayers] = useState(props.players);
+
+  const handleSort = (by: sortBy) => {
+    if (by === 'pph') {
+      props.players.forEach(
+        (player) => (player.pph = player.totalScore / player.totalHands)
+      );
+    }
+    setSortedPlayers([
+      ...props.players.sort((a, b) =>
+        (a[by] || 0) < (b[by] || 0) ? 1 : (a[by] || 0) > (b[by] || 0) ? -1 : 0
+      ),
+    ]);
   };
 
   return (
@@ -26,27 +44,32 @@ function Leaderboard(props: LeaderboardProps) {
                 <th className="py-2 px-4">Name</th>
                 <th
                   className="py-2 px-2 hover:cursor-pointer"
-                  onClick={() => props.handleSort('totalScore')}
+                  onClick={() => handleSort('totalScore')}
                 >
                   Points
                 </th>
-                <th className="py-2 px-1">Games</th>
+                <th
+                  className="py-2 px-1"
+                  onClick={() => handleSort('gameCount')}
+                >
+                  Games
+                </th>
                 <th
                   className="py-2 px-1 hover:cursor-pointer"
-                  onClick={() => props.handleSort('wins')}
+                  onClick={() => handleSort('wins')}
                 >
                   Wins
                 </th>
                 <th
                   className="py-2 px-1 hover:cursor-pointer"
-                  onClick={() => props.handleSort('pph')}
+                  onClick={() => handleSort('pph')}
                 >
                   PPH
                 </th>
               </tr>
             </thead>
             <tbody>
-              {props.players.map((player, index) => (
+              {sortedPlayers.map((player, index) => (
                 <tr key={player.name} className="border-t">
                   <th className="py-2 px-1">{index + 1} </th>
                   <th className="font-normal">{formatName(player.name)}</th>
