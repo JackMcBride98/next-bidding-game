@@ -9,33 +9,21 @@ import AceOfHearts from '../public/images/aceOfHearts.svg';
 import AceOfDiamonds from '../public/images/aceOfDiamonds.svg';
 import AceOfSpades from '../public/images/aceOfSpades.svg';
 import Leaderboard from '../components/leaderboard';
-import Player, { PlayerType } from '../models/player';
+import GameHistory from '../components/gamehistory';
+import PlayerModel, { PlayerType } from '../models/player';
+import GameModel, { GameType } from '../models/game';
 
 const contentType = 'application/json';
 interface Props {
   players: PlayerType[];
+  games: GameType[];
 }
 
-const Home: NextPage<Props> = ({ players }) => {
+const Home: NextPage<Props> = ({ players, games }) => {
   const [count, setCount] = useState(0);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await fetch('/api/hello', {
-  //       method: 'GET',
-  //       headers: {
-  //         Accept: contentType,
-  //         'Content-Type': contentType,
-  //       },
-  //     }).then((res) => res.json());
-  //     console.log(res);
-  //   };
-  //   fetchData();
-  //   return () => {};
-  // }, []);
-
   return (
-    <div className="bg-gradient-to-t from-red-100 h-full min-h-screen">
+    <div className="bg-gradient-to-t from-red-100 h-full min-h-screen min-w-screen">
       <Head>
         <title>ET Bidding Game</title>
         <meta
@@ -65,6 +53,7 @@ const Home: NextPage<Props> = ({ players }) => {
           ❤️ <span className="font-bold">{count}</span>
         </button>
         <Leaderboard players={players} isLoading={false} />
+        <GameHistory games={games} />
       </main>
     </div>
   );
@@ -72,14 +61,22 @@ const Home: NextPage<Props> = ({ players }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   await dbConnect();
-  const players: PlayerType[] = await Player.find({});
+  const players: PlayerType[] = await PlayerModel.find({});
   const filteredPlayers = players.filter((player) => player.gameCount !== 0);
   const sortedPlayers = filteredPlayers.sort(
     (a, b) => b.totalScore - a.totalScore
   );
+  const games: GameType[] = await GameModel.find({}).populate('players');
   return {
     props: {
       players: JSON.parse(JSON.stringify(sortedPlayers)),
+      games: (JSON.parse(JSON.stringify(games)) as GameType[]).map((game) => ({
+        ...game,
+        players: (game.players as PlayerType[]).map((player, index) => ({
+          ...player,
+          score: game.totalScores[index],
+        })),
+      })),
     },
   };
 };

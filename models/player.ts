@@ -1,17 +1,16 @@
-import mongoose, { Schema, model } from 'mongoose';
-
-interface Game {
-  name?: string;
-}
+import mongoose, { Schema } from 'mongoose';
+import { GameType } from './game';
 
 export interface PlayerType {
   name: string;
   gameCount: number;
   totalScore: number;
+  score?: number;
   totalHands: number;
-  games: Game[];
+  games: GameType[];
   wins: number;
   pph?: number;
+  _id: string;
 }
 
 const PlayerSchema = new Schema<PlayerType>({

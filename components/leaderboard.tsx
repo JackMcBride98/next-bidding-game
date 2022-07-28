@@ -33,7 +33,7 @@ function Leaderboard(props: LeaderboardProps) {
   return (
     <>
       <h1 className="text-2xl font-semibold text-stone-900">Leaderboard</h1>
-      <div className="border p-4 bg-white opacity-100 rounded-lg text-stone-900">
+      <div className="border p-4 bg-white opacity-100 rounded-lg text-stone-900 w-[21rem]">
         {props.isLoading ? (
           <p>Loading ...</p>
         ) : (

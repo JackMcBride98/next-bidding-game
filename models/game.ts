@@ -1,8 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { PlayerType } from './player';
+export interface GameType {
+  _id: string;
+  number: number;
+  location: string;
+  date: Date;
+  players: PlayerType[];
+  rounds: number[][];
+  upAndDown: boolean;
+  bonusRound: boolean;
+  bids: number[][];
+  gets: number[][];
+  scores: number[][];
+  totalScores: number[];
+}
 
-var Schema = mongoose.Schema;
-
-var GameSchema = new Schema({
+const GameSchema = new Schema<GameType>({
   number: Number,
   location: { type: String, required: true },
   date: { type: Date, required: true },
@@ -16,12 +29,5 @@ var GameSchema = new Schema({
   totalScores: { type: [Number], required: true },
 });
 
-// // Virtual for book's URL
-// BookSchema
-// .virtual('url')
-// .get(function () {
-//   return '/catalog/book/' + this._id;
-// });
-
 //Export model
-module.exports = mongoose.model('Game', GameSchema);
+export default mongoose.models.Game || mongoose.model('Game', GameSchema);
