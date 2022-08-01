@@ -8,8 +8,6 @@ interface LeaderboardProps {
 
 type sortBy = 'pph' | 'totalScore' | 'gameCount' | 'wins';
 
-type sort = 'totalScore' | 'gameCount' | 'wins';
-
 function Leaderboard(props: LeaderboardProps) {
   const formatName = (name: String) => {
     return name.charAt(0).toUpperCase() + name.toLowerCase().slice(1);
@@ -23,11 +21,9 @@ function Leaderboard(props: LeaderboardProps) {
         (player) => (player.pph = player.totalScore / player.totalHands)
       );
     }
-    setSortedPlayers([
-      ...props.players.sort((a, b) =>
-        (a[by] || 0) < (b[by] || 0) ? 1 : (a[by] || 0) > (b[by] || 0) ? -1 : 0
-      ),
-    ]);
+    setSortedPlayers(
+      [...props.players].sort((a, b) => (b[by] ?? 0) - (a[by] ?? 0))
+    );
   };
 
   return (
