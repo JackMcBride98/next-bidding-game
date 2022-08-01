@@ -22,4 +22,5 @@ const PlayerSchema = new Schema<PlayerType>({
   wins: Number,
 });
 
-export default mongoose.models.Player || mongoose.model('Player', PlayerSchema);
+export default mongoose.models.Player ||
+  mongoose.model<PlayerType>('Player', PlayerSchema);

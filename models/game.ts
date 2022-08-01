@@ -30,4 +30,5 @@ const GameSchema = new Schema<GameType>({
 });
 
 //Export model
-export default mongoose.models.Game || mongoose.model('Game', GameSchema);
+export default mongoose.models.Game ||
+  mongoose.model<GameType>('Game', GameSchema);
