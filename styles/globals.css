@@ -47,7 +47,7 @@ a {
   height: calc(100% - 12px);
   background: white;
   border-radius: 5px;
-  animation: opacityChange 3s infinite alternate;
+  animation: opacityChange 2s infinite alternate;
 }
 
 .rainbow::before {
@@ -58,13 +58,13 @@ a {
   top: -125%;
   width: 350%;
   height: 350%;
-  background-color: #ffffff;
+  background-color: #e5e7eb;
   background-repeat: no-repeat;
   background-size: 50% 50%, 50% 50%;
   background-position: 0 0, 100% 0, 100% 100%, 0 100%;
-  background-image: linear-gradient(#fee2e2, #ffffff),
-    linear-gradient(#fee2e2, #ffffff), linear-gradient(#ffffff, #ffffff),
-    linear-gradient(#ffffff, #ffffff);
+  background-image: linear-gradient(#ef4444, #e5e7eb),
+    linear-gradient(#ef4444, #e5e7eb), linear-gradient(#e5e7eb, #e5e7eb),
+    linear-gradient(#e5e7eb, #e5e7eb);
   animation: rotate 4s linear infinite;
 }
 
