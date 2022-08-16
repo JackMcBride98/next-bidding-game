@@ -29,7 +29,7 @@ const Game: NextPage<Props> = ({ game }) => {
   return (
     <div
       id={game._id + 'gamepage'}
-      className="grid justify-center justify-items-center gap-4 p-2"
+      className="grid justify-center justify-items-center gap-4 p-2 h-full min-h-screen bg-gradient-to-t from-red-100"
     >
       <h1 className="text-4xl font-bold text-stone-900">Game #{game.number}</h1>
       <div className="flex justify-between w-full">

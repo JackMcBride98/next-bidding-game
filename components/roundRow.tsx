@@ -1,19 +1,34 @@
+import type { Round } from '../models/game';
+
+interface Props {
+  round: Round;
+  currentRound: number;
+  index: number;
+  roundBids: number[];
+  roundGets: number[];
+  bidsDone: boolean;
+  handleBidsDone: () => void;
+  handleGetsDone: () => void;
+  handleBidsChange: (event: string, index: number) => void;
+  handleGetsChange: (event: string, index: number) => void;
+  cumulativeScores: number[];
+  handleUndo: () => void;
+}
+
 export default function RoundRow({
   round,
   currentRound,
   index,
   roundBids,
   roundGets,
-  roundScores,
   bidsDone,
   handleBidsDone,
   handleGetsDone,
   handleBidsChange,
   handleGetsChange,
-  errorMessage,
   cumulativeScores,
   handleUndo,
-}) {
+}: Props) {
   if (index < currentRound) {
     return (
       <tr className="flex divide-x divide-black text-center">

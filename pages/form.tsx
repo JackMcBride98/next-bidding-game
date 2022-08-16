@@ -1,10 +1,12 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import React, { useState } from 'react';
 
 const Form: NextPage = () => {
+  const router = useRouter();
   const [rounds, setRounds] = useState(10);
   const [randomiseSuits, setRandomiseSuits] = useState(false);
   const [upAndDown, setUpAndDown] = useState(false);
@@ -16,13 +18,16 @@ const Form: NextPage = () => {
     event.preventDefault();
     let errors = formValidate();
     if (Object.keys(errors).length === 0) {
-      console.log({
-        rounds: rounds,
-        randomiseSuits: randomiseSuits,
-        upAndDown: upAndDown,
-        bonusRound: bonusRound,
-        players: players,
-        location: location,
+      router.push({
+        pathname: '/scoreboard',
+        query: {
+          rounds: rounds,
+          randomiseSuits: randomiseSuits,
+          upAndDown: upAndDown,
+          bonusRound: bonusRound,
+          players: players,
+          location: location,
+        },
       });
     } else {
       alert(errors.join('\n'));
