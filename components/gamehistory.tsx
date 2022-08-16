@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GameType } from '../models/game';
+import Link from 'next/link';
 
 interface GameHistoryProps {
   games: GameType[];
@@ -62,12 +63,15 @@ function GameHistory(props: GameHistoryProps) {
                   ))}
               </tbody>
             </table>
-            <button
-              // onClick={() => props.handleMoreInfo(game)}
-              className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4"
+            <Link
+              href={{
+                pathname: `/game/${game.number}`,
+              }}
             >
-              More Info
-            </button>
+              <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
+                More Info
+              </a>
+            </Link>
           </div>
         ))}
       <button
