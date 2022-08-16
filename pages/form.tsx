@@ -46,6 +46,9 @@ const Form: NextPage = () => {
     if (players.length < 2) {
       errors.push('Must have at least two players');
     }
+    if (rounds * players.length >= 52) {
+      errors.push('There are not that many cards in the deck, Impossible');
+    }
     return errors;
   };
 
