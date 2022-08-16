@@ -69,7 +69,6 @@ const Game: NextPage<Props> = ({ game }) => {
                 index={index}
                 roundBids={game.bids[index]}
                 roundGets={game.gets[index]}
-                roundScores={game.scores[index]}
                 cumulativeScores={cumulativeScores[index]}
               />
             ))}
