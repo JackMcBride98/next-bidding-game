@@ -47,7 +47,7 @@ a {
   height: calc(100% - 12px);
   background: white;
   border-radius: 5px;
-  animation: opacityChange 6s infinite alternate;
+  animation: opacityChange 4.5s infinite alternate;
 }
 
 .rainbow::before {
@@ -65,7 +65,7 @@ a {
   background-image: linear-gradient(#ef4444, #e5e7eb),
     linear-gradient(#ef4444, #e5e7eb), linear-gradient(#e5e7eb, #e5e7eb),
     linear-gradient(#e5e7eb, #e5e7eb);
-  animation: rotate 4s linear infinite;
+  animation: rotate 3s linear infinite;
 }
 
 @keyframes opacityChange {
