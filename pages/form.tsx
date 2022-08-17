@@ -7,11 +7,11 @@ import React, { useState } from 'react';
 
 const Form: NextPage = () => {
   const router = useRouter();
-  const [rounds, setRounds] = useState(2);
-  const [randomiseSuits, setRandomiseSuits] = useState(false);
+  const [rounds, setRounds] = useState(10);
+  const [randomiseSuits, setRandomiseSuits] = useState(true);
   const [upAndDown, setUpAndDown] = useState(false);
   const [bonusRound, setBonusRound] = useState(false);
-  const [players, setPlayers] = useState(['ah', 'oof']);
+  const [players, setPlayers] = useState(['Jack', 'Brad', 'Matt', 'Liam']);
   const [location, setLocation] = useState('GG');
 
   const onSubmit = (event: React.SyntheticEvent) => {

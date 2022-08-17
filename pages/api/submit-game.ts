@@ -16,6 +16,7 @@ export default async function handler(
   );
   async.forEachOf(
     game.players,
+    /* tslint:disable-next-line */
     function iteratee(name: string, index: number, callback: () => void) {
       Player.findOne(
         { name: name },
@@ -61,7 +62,7 @@ export default async function handler(
           player.totalScore = player.totalScore + newGame.totalScores[i];
           player.totalHands = player.totalHands + newGame.rounds.length;
           player.games.push(newGame._id);
-          player.save(function (err: unknown) {
+          (player as any).save(function (err: unknown) {
             if (err) {
               console.log(err);
             }
