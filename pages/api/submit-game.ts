@@ -17,7 +17,11 @@ export default async function handler(
   );
   async.forEachOf(
     game.players,
-    function iteratee(name: string, index: number, callback: () => void) {
+    function iteratee(
+      name: string,
+      key: string | number,
+      callback: () => void
+    ) {
       Player.findOne(
         { name: name },
         function (err: unknown, player: PlayerType) {
@@ -42,7 +46,7 @@ export default async function handler(
               //saved
             });
           }
-          game.players[index] = player || newPlayer;
+          game.players[key] = player || newPlayer;
           callback();
         }
       );
