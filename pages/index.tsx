@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import dbConnect from '../lib/dbConnect';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import AceOfClubs from '../public/images/aceOfClubs.svg';
 import AceOfHearts from '../public/images/aceOfHearts.svg';
 import AceOfDiamonds from '../public/images/aceOfDiamonds.svg';
@@ -13,6 +13,7 @@ import GameHistory from '../components/gamehistory';
 import PlayerModel, { PlayerType } from '../models/player';
 import GameModel, { GameType } from '../models/game';
 import Count from '../models/count';
+import { useRouter } from 'next/router';
 
 const contentType = 'application/json';
 interface Props {
@@ -23,6 +24,14 @@ interface Props {
 
 const Home: NextPage<Props> = ({ players, games, storedCount }) => {
   const [count, setCount] = useState(storedCount);
+  const router = useRouter();
+  const firstGameRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (firstGameRef.current && router.query.gameSubmitted) {
+      firstGameRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
 
   return (
     <div className="bg-gradient-to-t from-red-100 h-full min-h-screen min-w-screen">
@@ -61,7 +70,7 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
           ❤️ <span className="font-bold">{count}</span>
         </button>
         <Leaderboard players={players} isLoading={false} />
-        <GameHistory games={games} />
+        <GameHistory games={games} firstGameRef={firstGameRef} />
       </main>
     </div>
   );

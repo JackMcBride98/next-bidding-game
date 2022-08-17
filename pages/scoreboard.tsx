@@ -2,7 +2,8 @@ import RoundRow from '../components/roundRow';
 import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import type { Round } from '../models/game';
+import { Round } from '../models/game';
+import Head from 'next/head';
 
 const suits = ['♥', '♠', '♦', '♣', '⨯'];
 
@@ -67,7 +68,6 @@ const arraySum = (array: number[][]) => {
 };
 
 const Scoreboard: NextPage = () => {
-  const [gameData, setGameData] = useState({});
   const [rounds, setRounds] = useState<Round[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [roundBids, setRoundBids] = useState<number[][]>([]);
@@ -85,7 +85,20 @@ const Scoreboard: NextPage = () => {
     upAndDown,
     bonusRound,
     players,
+    location,
   } = router.query;
+
+  const warningText =
+    'You have unsaved changes - are you sure you wish to leave this page?';
+  const handleWindowClose = (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+    return (e.returnValue = warningText);
+  };
+  const handleBrowseAway = () => {
+    if (window.confirm(warningText)) return;
+    router.events.emit('routeChangeError');
+    throw 'routeChange aborted.';
+  };
 
   useEffect(() => {
     const theRounds = generateRounds(
@@ -119,24 +132,15 @@ const Scoreboard: NextPage = () => {
 
   // prompt the user if they try and leave with unsaved changes
   useEffect(() => {
-    const warningText =
-      'You have unsaved changes - are you sure you wish to leave this page?';
-    const handleWindowClose = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      return (e.returnValue = warningText);
-    };
-    const handleBrowseAway = () => {
-      if (window.confirm(warningText)) return;
-      router.events.emit('routeChangeError');
-      throw 'routeChange aborted.';
-    };
-    window.addEventListener('beforeunload', handleWindowClose);
-    router.events.on('routeChangeStart', handleBrowseAway);
+    if (!isSubmitting) {
+      window.addEventListener('beforeunload', handleWindowClose);
+      router.events.on('routeChangeStart', handleBrowseAway);
+    }
     return () => {
       window.removeEventListener('beforeunload', handleWindowClose);
       router.events.off('routeChangeStart', handleBrowseAway);
     };
-  }, []); //eslint-disable-line react-hooks/exhaustive-deps
+  }, [isSubmitting]); //eslint-disable-line react-hooks/exhaustive-deps
 
   const handleBidsDone = () => {
     let bidsSum = roundBids[currentRound].reduce((a, b) => a + b, 0);
@@ -221,8 +225,38 @@ const Scoreboard: NextPage = () => {
     }
   };
 
+  const submitGame = async () => {
+    const response = await fetch('/api/submit-game', {
+      method: 'POST',
+      body: JSON.stringify({
+        location: location as string,
+        date: new Date(),
+        players: players,
+        rounds: rounds.slice(0, currentRound),
+        upAndDown: upAndDown,
+        bonusRound: bonusRound,
+        bids: roundBids,
+        gets: roundGets,
+        scores: roundScores,
+        totalScores: cumulativeScores[currentRound - 1],
+        addToLeaderboard: addToLeaderboard,
+      }),
+    });
+    if (response.status === 200) {
+      router.push({ pathname: '/', query: { gameSubmitted: true } });
+    }
+  };
+
   return (
     <div className="w-full h-full min-h-screen bg-gradient-to-t from-red-100">
+      <Head>
+        <title>Scoreboard</title>
+        <meta
+          name="description"
+          content="ET Bidding Game - a site used to score a card game, the bidding game, when played by the Entertainment Team."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="flex flex-col text-sm overflow-x-auto p-1 mx-auto min-h-screen bg-transparent md:items-center">
         {/* <p>Location: {gameData.location}</p> */}
         <table className="mb-5 divide-y divide-black border-collapse">
@@ -276,27 +310,19 @@ const Scoreboard: NextPage = () => {
             <label className="border p-2 rounded-lg w-max">
               Add to Leaderboard
               <input
-                className="text-lg text-stone-900 ml-4 w-4 h-4"
+                className="text-lg text-stone-900 ml-4 w-4 h-4 accent-pink-500"
                 type="checkbox"
                 checked={addToLeaderboard}
                 onChange={() => setAddToLeaderboard(!addToLeaderboard)}
               />
             </label>
             {isSubmitting ? (
-              <p>Submitting game ...</p>
+              <div className="dots-3" />
             ) : (
               <button
                 onClick={() => {
                   setIsSubmitting(true);
-                  // submitGame(
-                  //   gameData,
-                  //   rounds,
-                  //   roundBids,
-                  //   roundGets,
-                  //   roundScores,
-                  //   cumulativeScores[rounds.length - 1],
-                  //   addToLeaderboard
-                  // );
+                  submitGame();
                 }}
                 className="rounded-lg border border-black p-2 w-max"
               >
@@ -305,7 +331,7 @@ const Scoreboard: NextPage = () => {
             )}
           </div>
         ) : isSubmitting ? (
-          <p>Submitting game... </p>
+          <div className="dots-3" />
         ) : (
           <div className="flex flex-col items-center mb-4 space-y-4 mt-80">
             <label className="border p-2 rounded-lg w-max bg-white border-black flex items-center">
@@ -328,15 +354,7 @@ const Scoreboard: NextPage = () => {
                   )
                 ) {
                   setIsSubmitting(true);
-                  // submitGame(
-                  //   gameData,
-                  //   rounds.slice(0, currentRound),
-                  //   roundBids.slice(0, currentRound),
-                  //   roundGets.slice(0, currentRound),
-                  //   roundScores.slice(0, currentRound),
-                  //   cumulativeScores[currentRound - 1],
-                  //   addToLeaderboard
-                  // );
+                  submitGame();
                 }
               }}
               className="rounded-lg border border-black p-2 w-max bg-white"
