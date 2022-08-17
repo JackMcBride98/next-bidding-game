@@ -51,7 +51,7 @@ const Game: NextPage<Props> = ({ game }) => {
           {new Date(game.date).toUTCString()}
         </p>
       </div>
-      <div className="overflow-x-auto w-full text-sm items-center flex flex-col">
+      <div className="overflow-x-auto w-full md:w-auto text-sm">
         <table className="divide-y divide-black">
           <thead>
             <tr className="flex text-center w-full divide-x divide-black">
