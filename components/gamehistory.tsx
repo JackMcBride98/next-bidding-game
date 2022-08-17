@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { GameType } from '../models/game';
 import Link from 'next/link';
 
 interface GameHistoryProps {
   games: GameType[];
+  firstGameRef: React.RefObject<HTMLDivElement>;
 }
 
 function GameHistory(props: GameHistoryProps) {
@@ -16,9 +17,10 @@ function GameHistory(props: GameHistoryProps) {
     <div className="w-[21rem] items-center flex flex-col">
       {props.games
         .slice(0, view === 'recent' ? 5 : props.games.length)
-        .map((game, j) => (
+        .map((game, i) => (
           <div
             key={game._id}
+            ref={i === 0 ? props.firstGameRef : null}
             className="bg-white my-4 p-4 border rounded-lg text-stone-900 grid opacity-80 w-full"
           >
             <h1 className="font-semibold text-center text-lg mb-3 text-stone-900">

@@ -1,28 +1,33 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import React, { useState } from 'react';
 
 const Form: NextPage = () => {
-  const [rounds, setRounds] = useState(10);
+  const router = useRouter();
+  const [rounds, setRounds] = useState(2);
   const [randomiseSuits, setRandomiseSuits] = useState(false);
   const [upAndDown, setUpAndDown] = useState(false);
-  const [bonusRound, setBonusRound] = useState(true);
-  const [players, setPlayers] = useState(['Jack', 'Bradley', 'Matt', 'Liam']);
+  const [bonusRound, setBonusRound] = useState(false);
+  const [players, setPlayers] = useState(['ah', 'oof']);
   const [location, setLocation] = useState('GG');
 
   const onSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     let errors = formValidate();
     if (Object.keys(errors).length === 0) {
-      console.log({
-        rounds: rounds,
-        randomiseSuits: randomiseSuits,
-        upAndDown: upAndDown,
-        bonusRound: bonusRound,
-        players: players,
-        location: location,
+      router.push({
+        pathname: '/scoreboard',
+        query: {
+          rounds: rounds,
+          randomiseSuits: randomiseSuits,
+          upAndDown: upAndDown,
+          bonusRound: bonusRound,
+          players: players,
+          location: location,
+        },
       });
     } else {
       alert(errors.join('\n'));

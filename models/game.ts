@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import { PlayerType } from './player';
 
-interface round {
+export interface Round {
   hands: number;
   suit: string;
 }
@@ -11,7 +11,7 @@ export interface GameType {
   location: string;
   date: Date;
   players: PlayerType[];
-  rounds: round[];
+  rounds: Round[];
   upAndDown: boolean;
   bonusRound: boolean;
   bids: number[][];
