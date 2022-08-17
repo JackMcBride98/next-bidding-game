@@ -4,6 +4,7 @@ import dbConnect from '../../lib/dbConnect';
 import async from 'async';
 import Player, { PlayerType } from '../../models/player';
 import Game from '../../models/game';
+// @ts-nocheck
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,7 +17,6 @@ export default async function handler(
   );
   async.forEachOf(
     game.players,
-    /* tslint:disable-next-line */
     function iteratee(name: string, index: number, callback: () => void) {
       Player.findOne(
         { name: name },
