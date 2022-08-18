@@ -42,20 +42,6 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
           content="ET Bidding Game - a site used to score a card game, the bidding game, when played by the Entertainment Team."
         />
         <link rel="icon" href="/favicon.ico" />
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}'});
-          `,
-          }}
-        />
       </Head>
 
       <main className="flex flex-col items-center space-y-5">
