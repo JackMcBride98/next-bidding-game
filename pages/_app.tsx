@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
 import * as gtag from '../lib/gtag';
+import Head from 'next/head';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -38,6 +39,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       `,
         }}
       />
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="VZGnEz3QRBdhp6brONj_ezQLHEhN6mkzvBAN80-kugQ"
+        />
+      </Head>
       <Component {...pageProps} />
     </>
   );
