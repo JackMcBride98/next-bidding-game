@@ -30,7 +30,7 @@ const Game: NextPage<Props> = ({ game }) => {
   return (
     <div
       id={game._id + 'gamepage'}
-      className="flex flex-col  items-center gap-4 p-2 h-full min-h-screen bg-gradient-to-t from-red-100"
+      className="grid justify-center content-start gap-4 p-2 h-full min-h-screen bg-gradient-to-t from-red-100"
     >
       <Head>
         <title>Game #{game.number}</title>
@@ -40,18 +40,20 @@ const Game: NextPage<Props> = ({ game }) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 className="text-4xl font-bold text-stone-900">Game #{game.number}</h1>
-      <div className="flex justify-between w-72">
+      <h1 className="text-4xl font-bold text-stone-900 text-center">
+        Game #{game.number}
+      </h1>
+      <div className="flex justify-between w-72 mx-auto">
         <p className="text-stone-800 my-1 font-semibold">Location:</p>
         <p className="text-stone-800 my-1">{game.location}</p>
       </div>
-      <div className="flex justify-between space-x-2 w-72">
+      <div className="flex justify-between space-x-2 w-72 mx-auto">
         <p className="text-stone-800 my-1 font-semibold">Date:</p>
         <p className="text-stone-800 my-1">
           {new Date(game.date).toUTCString()}
         </p>
       </div>
-      <div className="overflow-x-auto w-full md:w-auto text-sm">
+      <div className="overflow-x-auto w-full text-sm justify-self-center">
         <table className="divide-y divide-black">
           <thead>
             <tr className="flex text-center w-full divide-x divide-black">
@@ -109,7 +111,7 @@ const Game: NextPage<Props> = ({ game }) => {
         </table>
       </div>
       <Link href="/">
-        <a className="border border-black rounded-lg p-2 bg-white">
+        <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center h-max">
           Back to Home
         </a>
       </Link>
