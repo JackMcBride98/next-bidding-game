@@ -37,27 +37,27 @@ function Leaderboard(props: LeaderboardProps) {
             <thead>
               <tr className="">
                 <th className="py-2 px-1"></th>
-                <th className="py-2 px-4">Name</th>
+                <th className="py-2 px-4 unselectable">Name</th>
                 <th
-                  className="py-2 px-2 hover:cursor-pointer"
+                  className="py-2 px-2 hover:cursor-pointer unselectable"
                   onClick={() => handleSort('totalScore')}
                 >
                   Points
                 </th>
                 <th
-                  className="py-2 px-1 hover:cursor-pointer"
+                  className="py-2 px-1 hover:cursor-pointer unselectable"
                   onClick={() => handleSort('gameCount')}
                 >
                   Games
                 </th>
                 <th
-                  className="py-2 px-1 hover:cursor-pointer"
+                  className="py-2 px-1 hover:cursor-pointer unselectable"
                   onClick={() => handleSort('wins')}
                 >
                   Wins
                 </th>
                 <th
-                  className="py-2 px-1 hover:cursor-pointer"
+                  className="py-2 px-1 hover:cursor-pointer unselectable"
                   onClick={() => handleSort('pph')}
                 >
                   PPH
