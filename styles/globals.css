@@ -107,3 +107,53 @@ a {
   -ms-user-select: none;
   user-select: none;
 }
+
+@property --c {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 70%;
+}
+
+@property --o {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0.8;
+}
+
+.new {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+      217deg,
+      rgba(255, 0, 0, var(--o)),
+      rgba(255, 0, 0, 0) var(--c)
+    ),
+    linear-gradient(
+      336deg,
+      rgba(0, 0, 255, var(--o)),
+      rgba(0, 0, 255, 0) var(--c)
+    ),
+    linear-gradient(
+      350deg,
+      rgba(0, 0, 0, 0),
+      rgba(255, 255, 0, var(--o)) var(--c)
+    ),
+    linear-gradient(
+      127deg,
+      rgba(0, 255, 0, var(--o)),
+      rgba(0, 255, 0, 0) var(--c)
+    );
+  animation: c 2s linear infinite alternate;
+  -webkit-mask: radial-gradient(circle, #0000 20%, #000 40%);
+}
+
+@keyframes c {
+  from {
+    --c: 90%;
+    --o: 0.8;
+  }
+  to {
+    --c: 40%;
+    --o: 0.3;
+  }
+}
