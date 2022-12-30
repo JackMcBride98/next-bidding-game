@@ -53,6 +53,14 @@ const Game: NextPage<Props> = ({ game }) => {
           {new Date(game.date).toUTCString()}
         </p>
       </div>
+      <div className="flex justify-between space-x-2 w-72 mx-auto">
+        <p className="text-stone-800 my-1 font-semibold">
+          Added to leaderboard:
+        </p>
+        <p className="text-stone-800 my-1">
+          {game.addToLeaderboard ? 'Yes' : 'No'}
+        </p>
+      </div>
       <div className="overflow-x-auto w-full text-sm justify-self-center">
         <table className="divide-y divide-black">
           <thead>
@@ -90,7 +98,9 @@ const Game: NextPage<Props> = ({ game }) => {
                   key={j}
                   className={
                     'py-2 w-16 text-center ' +
-                    (highestScore === score && 'bg-yellow-500')
+                    ((game.winner
+                      ? game.players[j].name === game.winner
+                      : highestScore === score) && 'bg-yellow-500')
                   }
                 >
                   {score}
