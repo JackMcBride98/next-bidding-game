@@ -6,6 +6,13 @@ import Player, { PlayerType } from '../../models/player';
 import Game from '../../models/game';
 // @ts-nocheck
 
+function getAllIndexes<T>(arr: T[], val: T): number[] {
+  let indexes = [],
+    i;
+  for (i = 0; i < arr.length; i++) if (arr[i] === val) indexes.push(i);
+  return indexes;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -55,13 +62,72 @@ export default async function handler(
       if (err) {
         console.log(err);
       }
+      game.winner = '';
+      game.randomWinner = false;
       const newGame = new Game(game);
       let highestScore = Math.max(...newGame.totalScores);
+      let isTie = false;
+      let winningPlayerName = '';
+      if (
+        newGame.totalScores.filter((score: number) => score === highestScore)
+          .length > 1
+      ) {
+        isTie = true;
+        //determine winner
+        let indexes = getAllIndexes(newGame.totalScores, highestScore);
+        // calculate bid percentages
+        let bidPercentages: number[] = [];
+        indexes.forEach((index: number) => {
+          let gotBid = 0;
+          for (let i = 0; i < newGame.rounds.length; i++) {
+            if (newGame.bids[i][index] === newGame.gets[i][index]) {
+              gotBid++;
+            }
+          }
+          bidPercentages.push(gotBid / newGame.rounds.length);
+        });
+        let highestBidPercentage = Math.max(...bidPercentages);
+        if (
+          bidPercentages.filter(
+            (bidPercentage) => bidPercentage === highestBidPercentage
+          ).length < 2
+        ) {
+          let winningPlayerIndex =
+            indexes[bidPercentages.indexOf(highestBidPercentage)];
+          winningPlayerName = game.players[winningPlayerIndex].name;
+        } else {
+          // calculate total hands won
+          let handsWon: number[] = [];
+          indexes.forEach((index: number) => {
+            let totalHandsWon = 0;
+            for (let i = 0; i < newGame.rounds.length; i++) {
+              totalHandsWon += newGame.gets[i][index];
+            }
+            handsWon.push(totalHandsWon);
+          });
+          let highestHandsWon = Math.max(...handsWon);
+          if (
+            handsWon.filter((handsWon) => handsWon === highestHandsWon).length <
+            2
+          ) {
+            let winningPlayerIndex = indexes[handsWon.indexOf(highestHandsWon)];
+            winningPlayerName = game.players[winningPlayerIndex].name;
+          }
+        }
+      }
       if (game.addToLeaderboard) {
         game.players.forEach(async (player: PlayerType, i: number) => {
-          if (highestScore === newGame.totalScores[i]) {
+          if (!isTie && highestScore === newGame.totalScores[i]) {
+            player.wins = player.wins + 1;
+            winningPlayerName = player.name;
+          }
+          if (isTie && winningPlayerName && player.name === winningPlayerName) {
             player.wins = player.wins + 1;
           }
+          if (isTie && !winningPlayerName) {
+            player.wins = player.wins + 1;
+          }
+          newGame.winner = winningPlayerName;
           player.gameCount = player.gameCount + 1;
           player.totalScore = player.totalScore + newGame.totalScores[i];
           player.totalHands = player.totalHands + newGame.rounds.length;

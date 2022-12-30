@@ -18,6 +18,8 @@ export interface GameType {
   gets: number[][];
   scores: number[][];
   totalScores: number[];
+  addToLeaderboard: boolean;
+  winner: string;
 }
 
 const GameSchema = new Schema<GameType>({
@@ -32,6 +34,8 @@ const GameSchema = new Schema<GameType>({
   gets: { type: [[Number]], required: true },
   scores: { type: [[Number]], required: true },
   totalScores: { type: [Number], required: true },
+  addToLeaderboard: { type: Boolean, required: true },
+  winner: { type: String, required: true },
 });
 
 //Export model

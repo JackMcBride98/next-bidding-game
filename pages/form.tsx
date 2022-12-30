@@ -40,6 +40,9 @@ const Form: NextPage = () => {
       if (!player) {
         errors.push('Player Name must not be empty');
       }
+      if (player === 'Bradley') {
+        errors.push('Bradley is not allowed to play, only Brad');
+      }
     });
     if (!location) {
       errors.push('location must not be empty');
