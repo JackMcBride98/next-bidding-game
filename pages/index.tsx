@@ -78,6 +78,11 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
         >
           ❤️ <span className="font-bold">{count}</span>
         </button>
+        <Link href={'rules'}>
+          <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
+            Rules
+          </a>
+        </Link>
         <Leaderboard players={players} isLoading={false} />
         <GameHistory games={games} firstGameRef={firstGameRef} />
       </main>
