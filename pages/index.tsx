@@ -22,6 +22,12 @@ interface Props {
   storedCount: number;
 }
 
+const isPrime = (num: number): boolean => {
+  for (let i = 2, s = Math.sqrt(num); i <= s; i++)
+    if (num % i === 0) return false;
+  return num > 1;
+};
+
 const Home: NextPage<Props> = ({ players, games, storedCount }) => {
   const [count, setCount] = useState(storedCount);
   const router = useRouter();
@@ -63,6 +69,9 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
             const res = await fetch('/api/count').then((res) => res.json());
             if (res.count) {
               setCount(res.count);
+              if (isPrime(res.count)) {
+                router.push('/colour');
+              }
             }
           }}
           className="hover:text-lg text-red-500 h-8"
