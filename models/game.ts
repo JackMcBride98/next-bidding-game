@@ -35,7 +35,7 @@ const GameSchema = new Schema<GameType>({
   scores: { type: [[Number]], required: true },
   totalScores: { type: [Number], required: true },
   addToLeaderboard: { type: Boolean, required: true },
-  winner: { type: String, required: true },
+  winner: { type: String, required: false },
 });
 
 //Export model
