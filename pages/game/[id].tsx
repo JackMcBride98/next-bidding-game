@@ -1,4 +1,3 @@
-import React from 'react';
 import RoundRow from '../../components/roundRow';
 import type { NextPage, GetServerSideProps } from 'next';
 import GameModel, { GameType } from '../../models/game';
@@ -9,9 +8,10 @@ import Head from 'next/head';
 
 interface Props {
   game: GameType;
+  bidGetPercentages: number[];
 }
 
-const Game: NextPage<Props> = ({ game }) => {
+const Game: NextPage<Props> = ({ game, bidGetPercentages }) => {
   const formatName = (name: string) => {
     return name?.charAt(0).toUpperCase() + name?.toLowerCase().slice(1);
   };
@@ -27,13 +27,16 @@ const Game: NextPage<Props> = ({ game }) => {
       cumulativeScores[i][j] += cumulativeScores[i - 1][j];
     }
   }
+
+  const title = `Game #${game.number}`;
+
   return (
     <div
       id={game._id + 'gamepage'}
       className="grid justify-center content-start gap-4 p-2 h-full min-h-screen bg-gradient-to-t from-red-100"
     >
       <Head>
-        <title>Game #{game.number}</title>
+        <title>{title}</title>
         <meta
           name="description"
           content="ET Bidding Game - a site used to score a card game, the bidding game, when played by the Entertainment Team."
@@ -117,6 +120,14 @@ const Game: NextPage<Props> = ({ game }) => {
               ))}
               <td></td>
             </tr>
+            <tr className="border-t border-black text-base flex divide-x divide-black">
+              <td className="py-2 w-9 pr-0.5">BGP</td>
+              {bidGetPercentages.map((bidGetPercentage: number, j: number) => (
+                <td key={j} className="py-2 w-16 text-center">
+                  {(bidGetPercentage * 100).toFixed(0)}%
+                </td>
+              ))}
+            </tr>
           </tbody>
         </table>
       </div>
@@ -134,9 +145,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const game = await GameModel.findOne({ number: params?.id }).populate(
     'players'
   );
+
+  const bidGetPercentages = await fetch(
+    `https://et-bidding-game-stats-api.herokuapp.com/game/${params?.id}/bid-get-percentage`
+  ).then((res) => res.json());
+
   return {
     props: {
       game: JSON.parse(JSON.stringify(game)),
+      bidGetPercentages,
     },
   };
 };
