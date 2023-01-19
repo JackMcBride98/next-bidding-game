@@ -91,6 +91,8 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  //wake up the stats api
+  fetch('https://et-bidding-game-stats-api.herokuapp.com/');
   await dbConnect();
   const players: PlayerType[] = await PlayerModel.find({});
   const filteredPlayers = players.filter((player) => player.gameCount !== 0);
