@@ -142,9 +142,10 @@ const Game: NextPage<Props> = ({ game, bidGetPercentages }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   await dbConnect();
-  const game = await GameModel.findOne({ number: params?.id }).populate(
-    'players'
-  );
+  const game = await GameModel.findOne({ number: params?.id }).populate({
+    path: 'players',
+    model: PlayerModel,
+  });
 
   const bidGetPercentages = await fetch(
     `https://et-bidding-game-stats-api.herokuapp.com/game/${params?.id}/bid-get-percentage`
