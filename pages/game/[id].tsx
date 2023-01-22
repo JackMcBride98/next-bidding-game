@@ -2,7 +2,7 @@ import React from 'react';
 import RoundRow from '../../components/roundRow';
 import type { NextPage, GetServerSideProps } from 'next';
 import GameModel, { GameType } from '../../models/game';
-import { PlayerType } from '../../models/player';
+import PlayerModel, { PlayerType } from '../../models/player';
 import dbConnect from '../../lib/dbConnect';
 import Link from 'next/link';
 import Head from 'next/head';
