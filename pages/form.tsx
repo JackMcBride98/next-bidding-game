@@ -57,6 +57,9 @@ const Form: NextPage = () => {
     if (rounds * players.length >= 52) {
       errors.push('There are not that many cards in the deck, Impossible');
     }
+    if (rounds.toString().includes('.')) {
+      errors.push('Rounds must be a whole number');
+    }
     return errors;
   };
 
@@ -83,19 +86,7 @@ const Form: NextPage = () => {
             value={rounds}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               e.preventDefault();
-              if (
-                parseInt(e.target.value) > 1 &&
-                parseInt(e.target.value) * players.length <= 52 &&
-                !e.target.value.includes('.')
-              ) {
-                setRounds(parseInt(e.target.value));
-              }
-              if (
-                parseInt(e.target.value) > 1 &&
-                parseInt(e.target.value) * players.length >= 52
-              ) {
-                setRounds(Math.floor(52 / players.length));
-              }
+              setRounds(parseInt(e.target.value));
             }}
           />
         </label>
