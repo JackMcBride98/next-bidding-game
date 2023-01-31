@@ -2,10 +2,6 @@ TODO:
 
 -Add some margin on game form
 
--Fix game page links not loading when directly going to link 500 error weird
-
--Create rules page
-
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
