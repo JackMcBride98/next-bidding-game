@@ -127,6 +127,7 @@ const Game: NextPage<Props> = ({ game, bidGetPercentages }) => {
                   {(bidGetPercentage * 100).toFixed(0)}%
                 </td>
               ))}
+              <td></td>
             </tr>
           </tbody>
         </table>
