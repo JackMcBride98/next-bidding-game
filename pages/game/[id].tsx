@@ -5,16 +5,48 @@ import PlayerModel, { PlayerType } from '../../models/player';
 import dbConnect from '../../lib/dbConnect';
 import Link from 'next/link';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
 interface Props {
   game: GameType;
+}
+
+interface StatsData {
+  handsWonPercentages: number[];
+  bidAggressionPercentages: number[];
   bidGetPercentages: number[];
 }
 
-const Game: NextPage<Props> = ({ game, bidGetPercentages }) => {
-  const formatName = (name: string) => {
-    return name?.charAt(0).toUpperCase() + name?.toLowerCase().slice(1);
-  };
+const formatName = (name: string) => {
+  return name?.charAt(0).toUpperCase() + name?.toLowerCase().slice(1);
+};
+
+const isArrayOfNumbers = (arr: any[]) => {
+  return Array.isArray(arr) && arr.every((item) => typeof item === 'number');
+};
+
+const isValidStatsData = (statsData: StatsData) => {
+  return (
+    isArrayOfNumbers(statsData.bidAggressionPercentages) &&
+    isArrayOfNumbers(statsData.bidGetPercentages) &&
+    isArrayOfNumbers(statsData.handsWonPercentages)
+  );
+};
+
+const Game: NextPage<Props> = ({ game }) => {
+  const [statsData, setStatsData] = useState<StatsData | undefined>(undefined);
+
+  useEffect(() => {
+    const getStats = async () => {
+      const statsData: StatsData = await fetch(
+        `/api/game-stats/${game.number.toString()}`
+      ).then((res) => res.json());
+      setStatsData(statsData);
+    };
+    getStats();
+
+    return () => {};
+  }, [game.number]);
 
   const highestScore = Math.max(...game.totalScores);
 
@@ -120,14 +152,55 @@ const Game: NextPage<Props> = ({ game, bidGetPercentages }) => {
               ))}
               <td></td>
             </tr>
-            <tr className="border-t border-black text-base flex divide-x divide-black">
-              <td className="py-2 w-9 pr-0.5">BGP</td>
-              {bidGetPercentages.map((bidGetPercentage: number, j: number) => (
-                <td key={j} className="py-2 w-16 text-center">
-                  {(bidGetPercentage * 100).toFixed(0)}%
+            {statsData === undefined ? (
+              <tr className="border-t border-black text-base flex divide-x divide-black">
+                <td className="w-full flex justify-center items-center">
+                  <div className="dots-3 py-4" />
                 </td>
-              ))}
-            </tr>
+              </tr>
+            ) : isValidStatsData(statsData) ? (
+              <>
+                <tr className="border-t border-black text-base flex divide-x divide-black">
+                  <td className="py-2 w-9 pr-0.5">BGP</td>
+                  {statsData.bidGetPercentages.map(
+                    (bidGetPercentage: number, j: number) => (
+                      <td key={j} className="py-2 w-16 text-center">
+                        {(bidGetPercentage * 100).toFixed(0)}%
+                      </td>
+                    )
+                  )}
+                  <td></td>
+                </tr>
+                <tr className="border-t border-black text-base flex divide-x divide-black">
+                  <td className="py-2 w-9 pr-0.5">BA</td>
+                  {statsData.bidAggressionPercentages.map(
+                    (bidAgressionPercentage: number, j: number) => (
+                      <td key={j} className="py-2 w-16 text-center">
+                        {bidAgressionPercentage.toFixed(2)}
+                      </td>
+                    )
+                  )}
+                  <td></td>
+                </tr>
+                <tr className="border-t border-black text-base flex divide-x divide-black">
+                  <td className="py-2 w-9 pr-0.5">HW</td>
+                  {statsData.handsWonPercentages.map(
+                    (handsWonPercentage: number, j: number) => (
+                      <td key={j} className="py-2 w-16 text-center">
+                        {(handsWonPercentage * 100).toFixed(0)}%
+                      </td>
+                    )
+                  )}
+                  <td></td>
+                </tr>
+              </>
+            ) : (
+              <tr className="border-t border-black text-base flex divide-x divide-black">
+                <td className="w-full flex justify-center items-center text-red-500">
+                  Error fetching stats data
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -147,14 +220,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     model: PlayerModel,
   });
 
-  const bidGetPercentages = await fetch(
-    `https://et-bidding-game-stats-api.herokuapp.com/game/${params?.id}/bid-get-percentage`
-  ).then((res) => res.json());
-
   return {
     props: {
       game: JSON.parse(JSON.stringify(game)),
-      bidGetPercentages,
     },
   };
 };
