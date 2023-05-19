@@ -15,7 +15,7 @@ const Rules: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col items-center space-y-4 mb-4 w-80">
-        <p className="text-4xl text-stone-900">RULES</p>
+        <h1 className="text-4xl text-stone-900">RULES</h1>
         <p className="text-stone-900 mt-8 mx-1">
           The bidding game consists of a number of rounds, where players are
           dealt a hand of cards and bids for how many hands they will win in the
@@ -23,7 +23,7 @@ const Rules: NextPage = () => {
           <br />
           <br />
         </p>
-        <p className="text-4xl text-stone-900">BIDDING</p>
+        <h2 className="text-4xl text-stone-900">BIDDING</h2>
         <p className="text-stone-900 mt-4 mx-1">
           During the round players take it in turns to bid for the number of
           hands they will win in the round. <br />
@@ -32,7 +32,7 @@ const Rules: NextPage = () => {
           continues clockwise. <br /> <br />
           The bids may not add up to the number of hands in the round.
         </p>
-        <p className="text-4xl text-stone-900">PLAYING</p>
+        <h2 className="text-4xl text-stone-900">PLAYING</h2>
         <p className="text-stone-900 mt-4 mx-1">
           Play begins with the player to the left of the first bidder <br />
           <br />
@@ -51,7 +51,7 @@ const Rules: NextPage = () => {
           <br /> <br />
           After each round the dealer moves clockwise.
         </p>
-        <p className="text-4xl text-stone-900">SCORING</p>
+        <h2 className="text-4xl text-stone-900">SCORING</h2>
         <p className="text-stone-900 mt-4 mx-1">
           At the end of the round scores are added up as so: <br />
           <br />

@@ -56,6 +56,11 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
           <AceOfDiamonds />
           <AceOfSpades />
         </div>
+        <Link href={'rules'}>
+          <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
+            Rules
+          </a>
+        </Link>
         <Link href="/form">
           <a className="rainbow rounded-lg p-2 flex items-center bg-white spinButton hover:underline">
             Create New Game
@@ -76,9 +81,9 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
         >
           ❤️ <span className="font-bold">{count}</span>
         </button>
-        <Link href={'rules'}>
+        <Link href={'stats'}>
           <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
-            Rules
+            Stats
           </a>
         </Link>
         <Leaderboard players={players} isLoading={false} />

@@ -1,13 +1,16 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
 import * as gtag from '../lib/gtag';
 import Head from 'next/head';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const [queryClient] = useState(() => new QueryClient());
+
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
@@ -45,7 +48,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="VZGnEz3QRBdhp6brONj_ezQLHEhN6mkzvBAN80-kugQ"
         />
       </Head>
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
     </>
   );
 }
