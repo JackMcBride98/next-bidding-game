@@ -1,6 +1,5 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import Link from 'next/link';
 import dbConnect from '../lib/dbConnect';
 import { useEffect, useState, useRef } from 'react';
@@ -15,18 +14,17 @@ import GameModel, { GameType } from '../models/game';
 import Count from '../models/count';
 import { useRouter } from 'next/router';
 
-const contentType = 'application/json';
-interface Props {
-  players: PlayerType[];
-  games: GameType[];
-  storedCount: number;
-}
-
 const isPrime = (num: number): boolean => {
   for (let i = 2, s = Math.sqrt(num); i <= s; i++)
     if (num % i === 0) return false;
   return num > 1;
 };
+
+interface Props {
+  players: PlayerType[];
+  games: GameType[];
+  storedCount: number;
+}
 
 const Home: NextPage<Props> = ({ players, games, storedCount }) => {
   const [count, setCount] = useState(storedCount);
@@ -92,7 +90,7 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   //wake up the stats api
-  fetch('https://et-bidding-game-stats-api.herokuapp.com/');
+  fetch('https://et-bidding-game-stats-api.azurewebsites.net/');
   await dbConnect();
   const players: PlayerType[] = await PlayerModel.find({});
   const filteredPlayers = players.filter((player) => player.gameCount !== 0);

@@ -14,14 +14,14 @@ export default async function handler(
   try {
     const { gameNumber } = req.query;
     const bidGetPercentages = await fetch(
-      `https://et-bidding-game-stats-api.herokuapp.com/game/${gameNumber}/bid-get-percentage`
+      `https://et-bidding-game-stats-api.azurewebsites.net/game/${gameNumber}/bid-get-percentage`
     ).then((res) => res.json());
     const bidAggressionPercentages: number[] = await fetch(
-      `https://et-bidding-game-stats-api.herokuapp.com/game/${gameNumber}/bid-aggression`
+      `https://et-bidding-game-stats-api.azurewebsites.net/game/${gameNumber}/bid-aggression`
     ).then((res) => res.json());
 
     const handsWonPercentages: number[] = await fetch(
-      `https://et-bidding-game-stats-api.herokuapp.com/game/${gameNumber}/hands-percentage`
+      `https://et-bidding-game-stats-api.azurewebsites.net/game/${gameNumber}/hands-percentage`
     ).then((res) => res.json());
     res.status(200).send({
       bidGetPercentages,
