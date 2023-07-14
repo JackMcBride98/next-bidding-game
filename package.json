@@ -12,6 +12,7 @@
     "@svgr/webpack": "^6.3.0",
     "async": "^3.2.4",
     "mongoose": "^6.4.5",
+    "ncage-cube": "^0.1.69",
     "next": "12.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
