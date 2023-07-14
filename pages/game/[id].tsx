@@ -6,6 +6,7 @@ import dbConnect from '../../lib/dbConnect';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 interface Props {
   game: GameType;
@@ -35,6 +36,7 @@ const isValidStatsData = (statsData: StatsData) => {
 
 const Game: NextPage<Props> = ({ game }) => {
   const [statsData, setStatsData] = useState<StatsData | undefined>(undefined);
+  const router = useRouter();
 
   useEffect(() => {
     const getStats = async () => {
@@ -44,9 +46,13 @@ const Game: NextPage<Props> = ({ game }) => {
       setStatsData(statsData);
     };
     getStats();
+    const random = Math.random();
+    if (random < 0.1) {
+      router.push('/game/cage');
+    }
 
     return () => {};
-  }, [game.number]);
+  }, [game.number, router]);
 
   const highestScore = Math.max(...game.totalScores);
 
