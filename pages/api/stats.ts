@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../lib/dbConnect';
 import GameModel, { GameType } from '../../models/game';
+import PlayerModel from '../../models/player';
 
 export type GameScore = {
 	number: number;
@@ -34,7 +35,7 @@ export default async function handler(
 				.sort({ _id: -1 })
 				.populate({
 					path: 'players',
-					model: 'Player',
+					model: PlayerModel,
 				});
 
 			const tenUpTenDownGames = games
