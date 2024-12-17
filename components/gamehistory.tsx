@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { GameType } from '../models/game';
 import Link from 'next/link';
+import { formatName } from '../helpers/helpers';
 
 interface GameHistoryProps {
   games: GameType[];
@@ -9,9 +10,6 @@ interface GameHistoryProps {
 
 function GameHistory(props: GameHistoryProps) {
   const [view, setView] = useState('recent');
-  const formatName = (name: string) => {
-    return name?.charAt(0).toUpperCase() + name?.toLowerCase().slice(1);
-  };
 
   return (
     <div className="w-[21rem] items-center flex flex-col">
