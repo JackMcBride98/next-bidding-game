@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../lib/dbConnect';
-import Count from '../../models/count';
 import GameModel, { GameType } from '../../models/game';
 import PlayerModel from '../../models/player';
-import { Dictionary } from 'async';
 
 export type GameScore = {
 	number: number;
@@ -35,7 +33,10 @@ export default async function handler(
 			await dbConnect();
 			const games: GameType[] = await GameModel.find({})
 				.sort({ _id: -1 })
-				.populate('players');
+				.populate({
+					path: 'players',
+					model: PlayerModel,
+				});
 
 			const tenUpTenDownGames = games
 				.filter(
