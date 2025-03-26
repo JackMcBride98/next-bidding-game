@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import {RefObject, useState} from 'react';
 import { GameType } from '../models/game';
 import Link from 'next/link';
 import { formatName } from '../helpers/helpers';
 
 interface GameHistoryProps {
   games: GameType[];
-  firstGameRef: React.RefObject<HTMLDivElement>;
+  firstGameRef: RefObject<HTMLDivElement | null>;
 }
 
 function GameHistory(props: GameHistoryProps) {

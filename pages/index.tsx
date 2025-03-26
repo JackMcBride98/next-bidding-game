@@ -56,7 +56,7 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
           <AceOfDiamonds />
           <AceOfSpades />
         </div>
-        <Link href={'rules'}>
+        <Link href="/rules">
           <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
             Rules
           </a>
@@ -73,7 +73,7 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
             if (res.count) {
               setCount(res.count);
               if (isPrime(res.count)) {
-                router.push('/colour');
+                void router.push('/colour');
               }
             }
           }}
@@ -81,7 +81,7 @@ const Home: NextPage<Props> = ({ players, games, storedCount }) => {
         >
           ❤️ <span className="font-bold">{count}</span>
         </button>
-        <Link href={'stats'}>
+        <Link href="/stats">
           <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
             Stats
           </a>
