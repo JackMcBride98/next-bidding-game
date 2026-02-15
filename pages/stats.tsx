@@ -1,12 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { formatName } from '../helpers/helpers';
-import { GameScore, PlayerStats } from './api/stats';
+import { GameScore, PlayerStats } from '../helpers/stats';
 import Link from 'next/link';
 import { GameScoreTable } from '../components/gameScoreTable';
 import { PlayerStatsTable } from '../components/playerStatsTable';
 import { useState } from 'react';
+import { getSiteStats } from '../helpers/stats';
 
 interface StatsData {
 	bestTenUpTenDownGameScores: Array<GameScore>;
@@ -14,12 +14,7 @@ interface StatsData {
 	playerStats: Array<PlayerStats>;
 }
 
-const Stats: NextPage = () => {
-	const { data, isLoading, error } = useQuery<StatsData>(['stats'], () => {
-		const apiUrl = '/api/stats';
-		return fetch(apiUrl).then((res) => res.json());
-	});
-
+const Stats: NextPage<{ statsData: StatsData }> = ({ statsData }) => {
 	const [filterPlayerStats, setFilterPlayerStats] = useState(true);
 
 	return (
@@ -35,19 +30,11 @@ const Stats: NextPage = () => {
 			<h1 className="text-4xl text-stone-900">STATS</h1>
 			<h2>Best 10 up 10 down games of all time</h2>
 			<div className="border p-4 bg-white opacity-100 rounded-lg text-stone-900">
-				{!error && isLoading ? (
-					<div className="dots-3" />
-				) : (
-					<GameScoreTable gameScores={data?.bestTenUpTenDownGameScores} />
-				)}
+				<GameScoreTable gameScores={statsData?.bestTenUpTenDownGameScores} />
 			</div>
 			<h2>Best 10 down games of all time</h2>
 			<div className="border p-4 bg-white opacity-100 rounded-lg text-stone-900">
-				{!error && isLoading ? (
-					<div className="dots-3" />
-				) : (
-					<GameScoreTable gameScores={data?.bestTenDownGameScores} />
-				)}
+				<GameScoreTable gameScores={statsData?.bestTenDownGameScores} />
 			</div>
 			<h2>All time player stats</h2>
 			<button
@@ -58,14 +45,10 @@ const Stats: NextPage = () => {
 				games
 			</button>
 			<div className="border p-4 bg-white opacity-100 rounded-lg text-stone-900">
-				{!error && isLoading ? (
-					<div className="dots-3" />
-				) : (
-					<PlayerStatsTable
-						playerStats={data?.playerStats}
-						filterFewGamesPlayersOut={filterPlayerStats}
-					/>
-				)}
+				<PlayerStatsTable
+					playerStats={statsData?.playerStats}
+					filterFewGamesPlayersOut={filterPlayerStats}
+				/>
 			</div>
 			<Link href="/">
 				<a className="border border-black rounded-lg p-2 bg-white">
@@ -74,6 +57,15 @@ const Stats: NextPage = () => {
 			</Link>
 		</div>
 	);
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+	const stats = await getSiteStats();
+	return {
+		props: {
+			statsData: stats,
+		},
+	};
 };
 
 export default Stats;

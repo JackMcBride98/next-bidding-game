@@ -15,111 +15,109 @@ import Count from '../models/count';
 import { useRouter } from 'next/router';
 
 const isPrime = (num: number): boolean => {
-  for (let i = 2, s = Math.sqrt(num); i <= s; i++)
-    if (num % i === 0) return false;
-  return num > 1;
+	for (let i = 2, s = Math.sqrt(num); i <= s; i++)
+		if (num % i === 0) return false;
+	return num > 1;
 };
 
 interface Props {
-  players: PlayerType[];
-  games: GameType[];
-  storedCount: number;
+	players: PlayerType[];
+	games: GameType[];
+	storedCount: number;
 }
 
 const Home: NextPage<Props> = ({ players, games, storedCount }) => {
-  const [count, setCount] = useState(storedCount);
-  const router = useRouter();
-  const firstGameRef = useRef<HTMLDivElement>(null);
+	const [count, setCount] = useState(storedCount);
+	const router = useRouter();
+	const firstGameRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (firstGameRef.current && router.query.gameSubmitted) {
-      firstGameRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
+	useEffect(() => {
+		if (firstGameRef.current && router.query.gameSubmitted) {
+			firstGameRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	});
 
-  return (
-    <div className="bg-gradient-to-t from-red-100 h-full min-h-screen min-w-screen">
-      <Head>
-        <title>ET Bidding Game</title>
-        <meta
-          name="description"
-          content="ET Bidding Game - a site used to score a card game, the bidding game, when played by the Entertainment Team."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+	return (
+		<div className="bg-gradient-to-t from-red-100 h-full min-h-screen min-w-screen">
+			<Head>
+				<title>ET Bidding Game</title>
+				<meta
+					name="description"
+					content="ET Bidding Game - a site used to score a card game, the bidding game, when played by the Entertainment Team."
+				/>
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
 
-      <main className="flex flex-col items-center space-y-5">
-        <h1 className="text-4xl font-bold text-stone-900">ET Bidding Game</h1>
-        <div className="flex w-72 flex-row gap-4">
-          <AceOfHearts />
-          <AceOfClubs />
-          <AceOfDiamonds />
-          <AceOfSpades />
-        </div>
-        <Link href="/rules">
-          <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
-            Rules
-          </a>
-        </Link>
-        <Link href="/form">
-          <a className="rainbow rounded-lg p-2 flex items-center bg-white spinButton hover:underline">
-            Create New Game
-          </a>
-        </Link>
-        <button
-          onClick={async () => {
-            setCount((count) => count + 1);
-            const res = await fetch('/api/count').then((res) => res.json());
-            if (res.count) {
-              setCount(res.count);
-              if (isPrime(res.count)) {
-                void router.push('/colour');
-              }
-            }
-          }}
-          className="hover:text-lg text-red-500 h-8"
-        >
-          ❤️ <span className="font-bold">{count}</span>
-        </button>
-        <Link href="/stats">
-          <a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
-            Stats
-          </a>
-        </Link>
-        <Leaderboard players={players} isLoading={false} />
-        <GameHistory games={games} firstGameRef={firstGameRef} />
-      </main>
-    </div>
-  );
+			<main className="flex flex-col items-center space-y-5">
+				<h1 className="text-4xl font-bold text-stone-900">ET Bidding Game</h1>
+				<div className="flex w-72 flex-row gap-4">
+					<AceOfHearts />
+					<AceOfClubs />
+					<AceOfDiamonds />
+					<AceOfSpades />
+				</div>
+				<Link href="/rules">
+					<a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
+						Rules
+					</a>
+				</Link>
+				<Link href="/form">
+					<a className="rainbow rounded-lg p-2 flex items-center bg-white spinButton hover:underline">
+						Create New Game
+					</a>
+				</Link>
+				<button
+					onClick={async () => {
+						setCount((count) => count + 1);
+						const res = await fetch('/api/count').then((res) => res.json());
+						if (res.count) {
+							setCount(res.count);
+							if (isPrime(res.count)) {
+								void router.push('/colour');
+							}
+						}
+					}}
+					className="hover:text-lg text-red-500 h-8"
+				>
+					❤️ <span className="font-bold">{count}</span>
+				</button>
+				<Link href="/stats">
+					<a className="border border-black rounded-lg p-2 bg-white w-max justify-self-center mt-4">
+						Stats
+					</a>
+				</Link>
+				<Leaderboard players={players} isLoading={false} />
+				<GameHistory games={games} firstGameRef={firstGameRef} />
+			</main>
+		</div>
+	);
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  //wake up the stats api
-  fetch('https://et-bidding-game-stats-api.azurewebsites.net/');
-  await dbConnect();
-  const players: PlayerType[] = await PlayerModel.find({});
-  const filteredPlayers = players.filter((player) => player.gameCount !== 0);
-  const sortedPlayers = filteredPlayers.sort(
-    (a, b) => b.totalScore - a.totalScore
-  );
-  const games: GameType[] = await GameModel.find({})
-    .sort({ _id: -1 })
-    .populate('players');
+	await dbConnect();
+	const players: PlayerType[] = await PlayerModel.find({});
+	const filteredPlayers = players.filter((player) => player.gameCount !== 0);
+	const sortedPlayers = filteredPlayers.sort(
+		(a, b) => b.totalScore - a.totalScore,
+	);
+	const games: GameType[] = await GameModel.find({})
+		.sort({ _id: -1 })
+		.populate('players');
 
-  const count = await Count.find({});
-  return {
-    props: {
-      players: JSON.parse(JSON.stringify(sortedPlayers)),
-      games: (JSON.parse(JSON.stringify(games)) as GameType[]).map((game) => ({
-        ...game,
-        players: (game.players as PlayerType[]).map((player, index) => ({
-          ...player,
-          score: game.totalScores[index],
-        })),
-      })),
-      storedCount: count[0].count,
-    },
-  };
+	const count = await Count.find({});
+	return {
+		props: {
+			players: JSON.parse(JSON.stringify(sortedPlayers)),
+			games: (JSON.parse(JSON.stringify(games)) as GameType[]).map((game) => ({
+				...game,
+				players: (game.players as PlayerType[]).map((player, index) => ({
+					...player,
+					score: game.totalScores[index],
+				})),
+			})),
+			storedCount: count[0].count,
+		},
+	};
 };
 
 export default Home;

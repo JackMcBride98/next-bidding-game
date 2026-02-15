@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { formatName } from '../helpers/helpers';
-import { GameScore, PlayerStats } from '../pages/api/stats';
+import { GameScore, PlayerStats } from '../helpers/stats';
 import { useEffect, useState } from 'react';
 
 export type PlayerStatsTableProps = {
@@ -14,7 +14,7 @@ export const PlayerStatsTable = ({
 }: PlayerStatsTableProps) => {
 	const [stats, setStats] = useState<PlayerStats[]>(
 		playerStats?.filter((s) => !filterFewGamesPlayersOut || s.totalGames > 2) ||
-			[]
+			[],
 	);
 
 	const sortStats = (key: keyof PlayerStats) => {
@@ -32,8 +32,8 @@ export const PlayerStatsTable = ({
 	useEffect(() => {
 		setStats(
 			playerStats?.filter(
-				(s) => !filterFewGamesPlayersOut || s.totalGames > 2
-			) || []
+				(s) => !filterFewGamesPlayersOut || s.totalGames > 2,
+			) || [],
 		);
 	}, [playerStats, filterFewGamesPlayersOut]);
 
