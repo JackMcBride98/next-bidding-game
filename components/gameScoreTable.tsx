@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { formatName } from '../helpers/helpers';
-import { GameScore } from '../pages/api/stats';
+import { GameScore } from '../helpers/stats';
 
 export type GameScoreTableProps = {
 	gameScores?: Array<GameScore>;
